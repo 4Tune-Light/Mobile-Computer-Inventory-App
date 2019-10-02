@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, View, Text, Image, TouchableOpacity, KeyboardAvoidingView, } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, Alert,
+				 KeyboardAvoidingView, AsyncStorage, ActivityIndicator } from 'react-native';
 import { Container, Header, Content, Form, Item, Input, Label, Picker, Button } from 'native-base';
 
 import { getProduct, updateProduct } from '../../publics/redux/actions/productActions';
@@ -9,15 +10,23 @@ import { getCategories } from '../../publics/redux/actions/categoryActions';
 const EditProducts = props => {
 	const [name, setName] = useState('');
 	const [image, setImage] = useState('');
-	const [idCategory, setIdCategory] = useState(null);
-	const [quantity, setQuantity] = useState(0);
+	const [idCategory, setIdCategory] = useState('');
+	const [quantity, setQuantity] = useState('');
 	const [description, setDescription] = useState('');
+
+	const [token, setToken] = useState('');
+	const [username, setUsername] = useState('');
+	const [email, setEmail] = useState('');
+
+	AsyncStorage.getItem('token').then(value => setToken(value))
+	AsyncStorage.getItem('username').then(value => setUsername(value))
+	AsyncStorage.getItem('email').then(value => setEmail(value))
 
 	const id = props.navigation.getParam('id');
 
 	const getDatas = async () => {
 		await props.getProduct(id);
-		await props.getCategories();
+		await props.getCategories('');
 
 		const {name, image, id_category, quantity, description} = props.product.products;
 		setName(name);
@@ -32,77 +41,97 @@ const EditProducts = props => {
 	}, [])
 
 	const editProduct = () => {
-		const data = {
-			name, image, id_category: idCategory, quantity, description
-		}
+		if (!name || !image || !idCategory || !quantity || !description) {
+			alert('All Fields Are Required')
+		} else {
+			const user = {
+				token, username, email
+			}
 
-		props.updateProduct(id, data);
-		props.navigation.goBack();
+			const data = {
+				name, image, id_category: idCategory, quantity, description
+			}
+
+			props.updateProduct(id, data, user);
+
+			Alert.alert(
+			  'Success',
+			  'Editing Product Success',
+			  [
+			    {text: 'OK', onPress: () => props.navigation.goBack()},
+			  ],
+			  {cancelable: false},
+			);
+		}
+		
 	}
 
 	const {isLoading, categories} = props.category
 
 	return(
-		<KeyboardAvoidingView style={{flex: 1}} behavior='padding' enabled>
-		<Container>
-      <Content>
-        <Form>
-          <Item floatingLabel>
-            <Label>Product Name</Label>
-            <Input value={name} onChangeText={value => setName(value)}/>
-          </Item>
+    <KeyboardAvoidingView behavior='height' keyboardVerticalOffset={100}>
+    <ScrollView keyboardShouldPersistTaps='handled'>
+      <Form>
+        <Item floatingLabel>
+          <Label>Product Name</Label>
+          <Input value={name} onChangeText={value => setName(value)}/>
+        </Item>
 
-          <Item floatingLabel>
-            <Label>Image (URL)</Label>
-            <Input value={image} onChangeText={value => setImage(value)}/>
-          </Item>
+        <Item floatingLabel>
+          <Label>Image (URL)</Label>
+          <Input value={image} onChangeText={value => setImage(value)}/>
+        </Item>
 
-          <Item style={{marginLeft: 15, marginTop: 25}} picker>
-          	<Label style={{marginRight: 40}}>Category</Label>
-            <Picker
-              mode="dropdown"
-              placeholder="Select Category"
-              placeholderStyle={{ color: "#bfc6ea" }}
-              selectedValue={idCategory}
-              onValueChange={value => setIdCategory(value)}
-            >
-            {
-            	(!isLoading && categories.length > 0) ? categories.map((category, i) => {
-									return <Picker.Item label={category.name} value={category.id} key={i} />
-								}) 
-							: <Picker.Item label='Select Category' value='' />
-						}
-            </Picker>
-          </Item>
+        <Item style={{marginLeft: 15, marginTop: 25}} picker>
+        	<Label style={{marginRight: 40}}>Category</Label>
+          <Picker
+            mode="dropdown"
+            placeholder="Select Category"
+            placeholderStyle={{ color: "#bfc6ea" }}
+            selectedValue={idCategory}
+            onValueChange={value => setIdCategory(value)}
+          >
+          {
+          	(!isLoading && categories.length > 0) ? categories.map(category => {
+								return <Picker.Item label={category.name} value={category.id} key={category.id} />
+							}) 
+						: null
+					}
+          </Picker>
+        </Item>
 
-          <Item floatingLabel>
-	          <Label>Quantity</Label>
-	          <Input 
-	          	keyboardType='numeric'
-	          	value={quantity}
-	          	onChangeText={value => setQuantity(value)}
-	          />
-	        </Item>
+        <Item floatingLabel>
+          <Label>Stock</Label>
+          <Input 
+          	keyboardType='numeric'
+          	value={quantity}
+          	onChangeText={value => setQuantity(value)}
+          />
+        </Item>
 
-	        <Item floatingLabel>
-	          <Label>Description</Label>
-	          <Input
-	          	value={description} 
-	          	onChangeText={value => setDescription(value)}
-	          />
-	        </Item>
+        <Item floatingLabel>
+          <Label>Description</Label>
+          <Input
+          	value={description} 
+          	onChangeText={value => setDescription(value)}
+          />
+        </Item>
 
-		      <View style={{margin: 15, marginTop: 30}}>
-		        <Button style={{width: 100, alignItems: 'center', justifyContent: 'center'}} onPress={editProduct} primary>
-		        	<Text style={{fontSize: 20, color: 'white'}}>Edit</Text>
-		        </Button>
-		      </View>
+	      <View style={{margin: 15, marginTop: 30}}>
+	        <Button style={{width: 100, alignItems: 'center', justifyContent: 'center'}} onPress={editProduct} primary>
+	        	{
+	        		props.product.isLoading === false ?
+	        			<Text style={{fontSize: 20, color: 'white'}}>Edit</Text>
+	        		:
+	        			<ActivityIndicator size='large' color='white' />
+	        	}
+	        </Button>
+	      </View>
 
-        </Form>
-        
-      </Content>
-    </Container>
-    </KeyboardAvoidingView>
+      </Form>
+     	</ScrollView>
+      </KeyboardAvoidingView>
+    
 	)
 }
 

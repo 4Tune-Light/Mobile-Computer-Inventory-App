@@ -20,29 +20,29 @@ const ProductsItem = props => {
 		}
 	}
 
-	const defaultImage = 'https://images.vexels.com/media/users/3/127491/isolated/preview/8cb9767b47a1f58908a132a8df10b748-computer-set-flat-icon-by-vexels.png';
+	const defaultImage = 'https://user-images.githubusercontent.com/52448426/65372270-92b75d00-dc22-11e9-8fcd-1b0e55ae4043.png';
 
 	return(
 		<Card style={{borderRadius: 3}}>
 			<CardItem>
 				<View style={{flex: 2}}>
 					<TouchableOpacity onPress={props.goTo.bind(this, product.id)}>
-						<Image source={{uri: image}} onError={() => setImage(defaultImage)} style={styles.image} resizeMode='contain' />
+						<Image source={{ uri: image }} onError={() => setImage(defaultImage)} style={styles.image} resizeMode='contain' />
 					</TouchableOpacity>
 				</View>
 				<View style={styles.title}>
 					<View>
 						<TouchableOpacity onPress={props.goTo.bind(this, product.id)}>
-							<Text style={styles.titleText}>{product.name}</Text>
+							<Text style={styles.titleText}>{product.name.length > 15 ? product.name.substr(0,15)+'...' : product.name}</Text>
 						</TouchableOpacity>
 					</View>
 					<View>
-						<Text>Category: {product.category}</Text>
+						<Text style={{color: '#444'}} >Category: {product.category}</Text>
 					</View>
 					<View style={{flexDirection: 'row', alignItems: 'baseline'}}>
-						<Text style={{marginRight: 5}}>Stocks: </Text>
+						<Text style={{marginRight: 5, color: '#444'}}>Stocks: </Text>
 						<Button style={styles.button} onPress={addOrReduce.bind(this, 'reduce')} info><Text style={styles.buttonText}>{'<'}</Text></Button>
-						<Text>{quantity}</Text>
+						<Text style={{color: '#444'}} >{quantity}</Text>
 						<Button style={styles.button} onPress={addOrReduce.bind(this, 'add')} info><Text style={styles.buttonText}>{'>'}</Text></Button>
 					</View>
 				</View>
@@ -53,8 +53,8 @@ const ProductsItem = props => {
 
 const styles = StyleSheet.create({
 	image: {
-		height: 120, 
-		width: 120,
+		height: 100, 
+		width: 100,
 	},
 
 	title: {
@@ -67,6 +67,7 @@ const styles = StyleSheet.create({
 		paddingBottom: 10, 
 		fontSize: 18, 
 		fontWeight: 'bold',
+		color: '#444'
 	},
 
 	button: {

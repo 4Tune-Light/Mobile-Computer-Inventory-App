@@ -4,7 +4,7 @@ import { StyleSheet, Text } from 'react-native';
 
 const AddButton = props => {
 	return(
-		<Button style={styles.button} onPress={props.addButton} info><Text style={styles.text}>+</Text></Button>
+		<Button style={{...styles.button, backgroundColor: props.buttonColor}} onPress={props.addButton} ><Text style={styles.text}>+</Text></Button>
 	)
 }
 

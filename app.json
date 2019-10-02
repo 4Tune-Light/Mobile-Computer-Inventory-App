@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Computer Inventory App",
-    "slug": "alphaapp",
+    "slug": "computer-inventory-app",
     "privacy": "public",
     "sdkVersion": "34.0.0",
     "platforms": [
@@ -25,6 +25,9 @@
     ],
     "ios": {
       "supportsTablet": true
+    },
+    "android": {
+      "package": "com.arkademy.computerapp"
     }
   }
 }

@@ -24,22 +24,23 @@ export default function(state = initState, action) {
 				isFulfilled: false,
 				isRedirected: false
 			}
-		case 'GET_PRODUCTS_REJECT':
-		case 'GET_PRODUCT_REJECT':
-		case 'CREATE_PRODUCT_REJECT':
-		case 'UPDATE_PRODUCT_REJECT':
-		case 'DELETE_PRODUCT_REJECT':
+		case 'GET_PRODUCTS_REJECTED':
+		case 'GET_PRODUCT_REJECTED':
+		case 'CREATE_PRODUCT_REJECTED':
+		case 'UPDATE_PRODUCT_REJECTED':
+		case 'DELETE_PRODUCT_REJECTED':
 			return {
 				...state,
+				products: [],
 				isLoading: false,
 				isRejected: true,
-				errMessage: action.payload.data.message
+				errMessage: action.payload.response.data.message
 			}
 		case 'GET_PRODUCTS_FULFILLED':
 			return {
 				...state,
 				products: action.payload.data.data,
-				total: action.payload.data.total[0],
+				total: action.payload.data.total[0].total,
 				isLoading: false,
 				isFulfilled: true,
 			}
@@ -71,11 +72,6 @@ export default function(state = initState, action) {
 				products: state.products.filter(product => product.id != action.payload.data.id),
 				isLoading: false,
 				isFulfilled: true,
-			}
-		case 'SEND_QUERY':
-			return {
-				...state,
-				query: action.payload
 			}
 		default:
 			return state;

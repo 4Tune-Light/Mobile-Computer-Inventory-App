@@ -14,8 +14,7 @@ const LoadingScreen = props => {
 	}, [])
 
 	return(
-		<View>
-			<Text>Loading Screennya Voss</Text>
+		<View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
 		</View>
 	)
 }

@@ -19,43 +19,31 @@ export const getProduct = id => {
 export const createProduct = (data, user) => {
 	return {
 		type: 'CREATE_PRODUCT',
-		payload: axios.post('/api/products', data)
+		payload: axios.post('/api/products', data, {headers: {auth: user.token, username: user.username, email: user.email}})
 	}
 }
-
-// , {headers: {auth: user.token, username: user.username, email: user.email}}
 
 export const updateProduct = (id, data, user) => {
 	return {
 		type: 'UPDATE_PRODUCT',
-		payload: axios.put('/api/products/' + id, data)
+		payload: axios.put('/api/products/' + id, data, {headers: {auth: user.token, username: user.username, email: user.email}})
 	}
 }
-
-// , {headers: {auth: user.token, username: user.username, email: user.email}}
 
 export const addOrReduce = (id, action, user) => {
 	const act = {action};
 	return {
 		type: 'ADD_OR_REDUCE',
-		payload: axios.patch('/api/products/' + id, act)
+		payload: axios.patch('/api/products/' + id, act, {headers: {auth: user.token, username: user.username, email: user.email}}
+)
 	}
 }
 
-// , {headers: {auth: user.token, username: user.username, email: user.email}}
 
 export const deleteProduct = (id, user) => {
 	return {
 		type: 'DELETE_PRODUCT',
-		payload: axios.delete('/api/products/' + id)
+		payload: axios.delete('/api/products/' + id, {headers: {auth: user.token, username: user.username, email: user.email}})
 	}
 }
 
-// , {headers: {auth: user.token, username: user.username, email: user.email}}
-
-export const sendQuery = data => {
-	return {
-		type: 'SEND_QUERY',
-		payload: data
-	}
-}

@@ -15,6 +15,7 @@ import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 
+import { MaterialIcons, MaterialCommunityIcons, FontAwesome, AntDesign } from '@expo/vector-icons'
 
 import LoadingScreen from './src/screens/auth/LoadingScreen';
 import LoginScreen from './src/screens/auth/LoginScreen';
@@ -50,13 +51,41 @@ const ProductsStack = createStackNavigator(
 
 const MainNavigator = createBottomTabNavigator(
   {
-    Products: ProductsStack,
-    Categories: CategoriesScreen,
-    Profile: ProfileScreen,
+    Products: {
+      screen: ProductsStack,
+      navigationOptions : {
+        tabBarLabel:'Products',
+        tabBarIcon: () => (
+          <MaterialIcons name="computer" size={32} color="#696969" />
+        )
+      }
+    },
+    Categories: {
+      screen: CategoriesScreen,
+      navigationOptions : {
+        tabBarLabel:'Categories',
+        tabBarIcon: () => (
+          <MaterialCommunityIcons name="library-books" size={28} color="#696969" />
+        )
+      }
+    },
+    Logout: {
+      screen: ProfileScreen,
+      navigationOptions : {
+        tabBarVisible: false,
+        tabBarLabel:'Logout',
+        tabBarIcon: () => (
+          <AntDesign name="logout" size={25} color="#696969" />
+        ),
+      },
+
+    },
   },
   {
     initialRouteName: 'Products',
-
+    tabBarOptions: {
+      activeTintColor: '#46A4D3'
+    }
   }
 );
 
@@ -75,7 +104,7 @@ const AuthNavigator = createSwitchNavigator(
 
 const Navigation = createAppContainer(AuthNavigator);
 
-axios.defaults.baseURL = 'http://192.168.1.16:7000';
+axios.defaults.baseURL = 'http://192.168.43.114:7000';
 
 const App = props => {
 	return(

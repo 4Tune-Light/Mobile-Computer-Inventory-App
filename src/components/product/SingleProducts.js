@@ -12,12 +12,24 @@ const SingleProducts = props => {
 	const [image, setImage] = useState('');
 	const [isDone, setIsDone] = useState(false);
 
+	const [token, setToken] = useState('');
+	const [username, setUsername] = useState('');
+	const [email, setEmail] = useState('');
+
+	AsyncStorage.getItem('token').then(value => setToken(value))
+	AsyncStorage.getItem('username').then(value => setUsername(value))
+	AsyncStorage.getItem('email').then(value => setEmail(value))
+
 	const editProduct = () => {
 		props.navigation.navigate('EditProducts', {id})
 	}
 
 	const deleteProduct = () => {
-		props.deleteProduct(id);
+		const user = {
+			token, username, email
+		}
+
+		props.deleteProduct(id, user);
 		props.navigation.goBack();
 	}
 
@@ -31,7 +43,7 @@ const SingleProducts = props => {
 		}
 	}, [props.product.isFulfilled])
 
-	const defaultImage = 'https://images.vexels.com/media/users/3/127491/isolated/preview/8cb9767b47a1f58908a132a8df10b748-computer-set-flat-icon-by-vexels.png';
+	const defaultImage = 'https://user-images.githubusercontent.com/52448426/65372270-92b75d00-dc22-11e9-8fcd-1b0e55ae4043.png';
 
 	var { products } = props.product;
 	return(

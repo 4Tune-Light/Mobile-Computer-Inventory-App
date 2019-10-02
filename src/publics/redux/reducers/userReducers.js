@@ -22,13 +22,13 @@ export default function(state = initState, action) {
 				isFulfilled: false,
 
 			}
-		case 'LOGIN_USER_REJECT':
-		case 'REGISTER_USER_REJECT':
+		case 'LOGIN_USER_REJECTED':
+		case 'REGISTER_USER_REJECTED':
 			return {
 				...state,
 				isLoading: false,
 				isRejected: true,
-				errMessage: action.payload.data.message
+				errMessage: action.payload.response.data.message
 			}
 		case 'LOGIN_USER_FULFILLED':
 			return {
